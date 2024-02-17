@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monthly Report</title>
+    <style>
+      @page {
+        @top-left {
+          background: #84ff80;
+          content: counter(page);
+          height: 1cm;
+          text-align: center;
+          width: 1cm;
+        }
+
+        @top-center {
+          background: #84ff80;
+          content: "My Basket Grocery Store"; 
+          display: block;
+          height: 0.05cm;
+          opacity: 0.5;
+          width: 100%;
+        }
+
+        @top-right {
+          content: string(heading);
+          font-size: 9pt;
+          height: 1cm;
+          vertical-align: middle;
+          width: 100%;
+        }
+
+        @bottom-center {
+          content: "Contact Us: support@mybasket.com Phone: +91 92239422122";
+          font-size: 10pt;
+          height: -2pt;
+          width: 100%;
+        }
+      }
+
+      @page: first {
+        background-size: cover;
+        margin: 0;
+      }
+      
+      @page chapter {
+        background: #ff8080;
+        margin: 0;
+
+        @top-left {
+          content: none;
+        }
+
+        @top-center {
+          content: none;
+        }
+
+        @top-right {
+          content: none;
+        }
+        @bottom-center {
+          content: none;
+        }
+      }
+      @media print {
+        footer {
+          display: none;
+        }
+        section {
+        page-break-after: always;
+        break-after: page;
+      }
+      }
+
+      body {
+        font-family: "Noto Sans", Arial, sans-serif;
+        color: #393939;
+        background-color: #fdffef;
+        font-size: 12pt;
+        font-weight: 300;
+        line-height: 1.5;
+        text-align: center;
+      }
+      h1 {
+        color: #ff6060;
+        font-size: 32pt;
+        margin: 5cm 2cm 0 2cm;
+        page: no-chapter;
+        width: 100%;
+      }
+      h2,
+      h3,
+      h4 {
+        color: rgb(193, 65, 65);
+        text-align: center;
+      }
+      #cover {
+        align-content: space-between;
+        flex-wrap: wrap;
+        height: 100%;
+        text-align: center;
+      }
+      #contents {
+        break-after: left;
+      }
+      #orders{
+        margin: 2%;
+        background-color: aliceblue;
+        border: 2px dashed black;
+      }
+      #contents h2 {
+        font-size: 30pt;
+        font-weight: 600;
+        color: rgb(135, 255, 121);
+        background-color: #ff8080;
+      }
+      #contents h3 {
+        font-weight: 500;
+        margin: 3em 0 1em;
+      }
+      #contents h3::before {
+        background: #ff8080;
+        content: "";
+        display: block;
+        height: 0.08cm;
+        margin-bottom: 0.25cm;
+        width: 2cm;
+      }
+      #contents ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      #contents ul li {
+        border-top: 0.25pt solid #c1c1c1;
+        margin: 0.25cm 0;
+        padding-top: 0.25cm;
+      }
+      #contents ul li::before {
+        color: #ff8080;
+        content: "* ";
+        font-size: 40pt;
+        line-height: 16pt;
+        vertical-align: bottom;
+      }
+      #contents ul li a {
+        color: inherit;
+        text-decoration-line: inherit;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      img.company-logo {
+        max-width: 100px;
+        max-height: 100px;
+        margin: 0 auto;
+        display: block;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      th,
+      td {
+        border: 2px solid #ff8080;
+        padding: 8px;
+        text-align: left;
+        background-color: #fadebd;
+      }
+      th {
+        background-color: #ff8080;
+        border: 1px solid #000;
+      }
+      .total {
+        font-weight: bold;
+      }
+      .badge {
+        color: #3d9500;
+        background-color: azure;
+        padding: 8px;
+        border-radius: 10%;
+      }
+      footer {
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        background-color: #ff8080 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <article id="cover">
+      <section>
+        <div>
+      <h1>MyBasket <span class="badge">{{ data['month'] }} Report</span></h1>
+      <h3>For <span class="badge">{{ data['username'] }}</span></h3>
+      <p>Email: <span class="badge">{{ data['email'] }}</span></p>
+      <h3>Total Monthly Expenditure <span class="badge">&#8377; {{ data['totalExpenditure'] }}</span></h3></div>
+      </section>
+    </article>
+
+    <article id="contents">
+      <h2>Orders</h2>
+      <article>
+        {% if data['orders'] is none %}
+        <p>No orders in the last month</p>
+        {% else %} {% for order in data['orders'] %}
+        <section id="orders">
+          
+          <h4>Order ID: <span class="badge"> #{{ order['id'] }}</span></h4>
+          <h4>
+            Order Placed At:
+            <span class="badge"> #{{ order['created_at'] }}</span>
+          </h4>
+          <h4>
+            Order Status: <span class="badge"> #{{ order['status'] }}</span>
+          </h4>
+          <div style="width: 75%; margin: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price per unit</th>
+                  <th>Quantity</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in order['items'] %}
+                <tr class="items-row">
+                  <td>{{ item['title'] }}</td>
+                  <td>&#8377;{{ item['price'] }}</td>
+                  <td>{{ item['quantity'] }}</td>
+                  <td>&#8377;{{ item['price'] * item['quantity'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <h3>
+              Order Total:
+              <span class="badge total"> &#8377;{{ order['total'] }}</span>
+            </h3>
+          </div>
+
+        </section>
+        {% endfor %} {% endif %}
+      </article>
+    </article>
+
+    <footer>
+      <div class="contact-info">
+        <p>Contact Email: help@mybasket.com</p>
+        <p>Contact Phone: +91 92239422122</p>
+      </div>
+    </footer>
+  </body>
+</html>
