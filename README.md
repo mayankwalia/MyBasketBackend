@@ -81,7 +81,7 @@ The MyBasket app adopts a Model-View-Controller (MVC) architecture to ensure a w
 - Refer to the YAML file for making API requests to retrieve data.
 
 # Demo link
-- A demonstration of how the app was made and is to be used is provided [here](https://drive.google.com/file/d/1d0gzGRI-lDv6kOpwo7zrQg6R08efc0uq/view)
+- A demonstration of how the app was made and is to be used is provided [here](https://drive.google.com/file/d/1inWVdXMOVnRe5BdfyMSIijerSosfKn3x/view?usp=sharing)
 
 # Folder Structure
 
